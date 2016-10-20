@@ -5,13 +5,19 @@
 
 int main(int argc, char** argv)
 {	
-	node* test = (node*) malloc(sizeof(node));
-	test->data = 98989998898998;
-	
+	node* test1 = (node*) malloc(sizeof(node));
+	test1->data = 1;
+
+	node* test2 = (node*) malloc(sizeof(node));
+	test2->data = 2;
+
 	HashTable table = DEFAULT_HASH;
-	table.hashlist[0] = test;
-	printf("%d\n",table.size);
-	printf("%llx\n", table.hashlist[0]->data);
+		
+	table.addNode(table.hashlist, test2, 0);
+	table.addNode(table.hashlist, test1, 0);
+	table.printlist(table.hashlist, table.size);
+	
+	
 
 	return 0;
 }

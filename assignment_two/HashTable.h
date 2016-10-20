@@ -13,12 +13,18 @@ typedef struct hash{
 	node** hashlist;
 	void (*rehash)(node);
 	int (*hash)(node, int);
+	void (*addNode)(node**, node*, int);
+	void (*printlist)(node**, int);
 }HashTable;
 
 void rehash(node value);
 
 int hash(node value, int size);
 
+void addNode(node** hashlist, node* newNode, int index);
+
+void printlist(node** hashlist, int size);
+
 //generic hashtable struct
-#define DEFAULT_HASH {0, calloc(1, sizeof(node)), &rehash, &hash};
+#define DEFAULT_HASH {1, calloc(1, sizeof(node)), &rehash, &hash, &addNode, &printlist};
 
