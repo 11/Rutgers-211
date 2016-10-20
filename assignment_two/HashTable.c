@@ -42,12 +42,35 @@ void addNode(node** hashlist, node* newNode, int index)
 		
 	}
 	
-	//go to the beginning of index that the bode wants to be hased too
-	//will act as our itereating variable
-	
-	//node* bucketptr = hashlist[index];
+	//otherwise, add the node to the middle/end of the linked list
+	else
+	{
+		node *itr = hashlist[index];
 
-	//while(newNode->data < bucketptr->next->data )
+		while(itr->next != NULL)
+		{	
+			//if the node is already in the linked list
+			if(itr->next->data == newNode->data)
+			{
+				return;
+			}
+		
+			//if we reach a node that is greater than the one being added, add it in between itr and next
+			else if(itr->next->data > newNode->data)
+			{	
+				node* tmp = itr->next;
+
+				itr->next = newNode;
+				itr->next->next = tmp;
+				return;
+			}
+			itr= itr->next;
+		}
+	
+		itr->next = newNode;
+		return;
+	}
+	
 }
 
 void printlist(node** hashlist, int size)
