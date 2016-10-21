@@ -1,8 +1,7 @@
 #include "HashTable.h"
-
 #include <stdio.h>
 
-/**
+/*
  * acts as the hash function to a hashtable
  */ 
 int get_hash_index(unsigned long long value, int size)
@@ -12,24 +11,21 @@ int get_hash_index(unsigned long long value, int size)
 	return hash_val;
 }
 
-/**
- * acts as the rehash function to a hashtable
- */
-void rehash(node value)
-{
-	
-}
-
 /*
  * adds node to hash table
  */
-void addnode(node** hashlist, node* newNode, int index)
+bool hash(node** hashlist, node* newNode, int index)
 {
 	//if the index we mapped to is null, store the first position and exit
 	if(hashlist[index] == NULL)
 	{
 		hashlist[index] = newNode;
-		return;
+		return true;
+	}
+
+	else if(hashlist[index]->data == newNode->data)
+	{
+		return false;
 	}
 
 	//if the root nodes data is greater than the newNode data
@@ -44,10 +40,10 @@ void addnode(node** hashlist, node* newNode, int index)
 		hashlist[index] = newNode;
 		
 	}
-	
+
 	//otherwise, add the node to the middle/end of the linked list
 	else
-	{
+	{	
 		node *itr = hashlist[index];
 
 		while(itr->next != NULL)
@@ -55,24 +51,65 @@ void addnode(node** hashlist, node* newNode, int index)
 			//if the node is already in the linked list
 			if(itr->next->data == newNode->data)
 			{
-				return;
+				return false;
 			}
-		
+				
 			//if we reach a node that is greater than the one being added, add it in between itr and next
 			else if(itr->next->data > newNode->data)
 			{	
 				node* tmp = itr->next;
-
 				itr->next = newNode;
 				itr->next->next = tmp;
-				return;
+				return true;
 			}
 			itr= itr->next;
 		}
 	
 		itr->next = newNode;
-		return;
+		return true;
 	}
+	return false;
+}
+
+node** rehash(node** hashlist, int size)
+{
+	int i;
+
+	node* root = NULL;
+	node* cur = NULL;
+
+	//extract all the values
+	for(i=0; i<size; i++)
+	{
+		node* itr = hashlist[i];
+		
+		while(itr!=NULL)
+		{
+			if(root == NULL)
+			{
+				root = itr;
+				cur = root;
+			}	
+			else
+			{
+				cur->next = itr;
+				cur = cur->next;
+			}
+
+			itr = itr->next;
+		}
+	}
+
+	cur = root;
+	node** newList;
+	
+	while(cur!=NULL)
+	{
+		hash(newList, cur, get_hash_index(cur->data, size*2));
+		cur = cur->next;
+	}
+
+	return newList;
 	
 }
 
