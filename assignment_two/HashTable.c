@@ -1,12 +1,15 @@
 #include "HashTable.h"
 
+#include <stdio.h>
 
 /**
  * acts as the hash function to a hashtable
  */ 
-int hash(node value, int size)
+int get_hash_index(unsigned long long value, int size)
 {
-	return value.data % size;
+	int hash_val = value % size;
+
+	return hash_val;
 }
 
 /**
@@ -20,7 +23,7 @@ void rehash(node value)
 /*
  * adds node to hash table
  */
-void addNode(node** hashlist, node* newNode, int index)
+void addnode(node** hashlist, node* newNode, int index)
 {
 	//if the index we mapped to is null, store the first position and exit
 	if(hashlist[index] == NULL)

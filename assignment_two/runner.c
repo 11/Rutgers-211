@@ -1,32 +1,39 @@
 #include "HashTable.h"
-#include "filereader.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 
 int main(int argc, char** argv)
 {	
-	node* test1 = (node*) malloc(sizeof(node));
-	test1->data = 1;
-
-	node* test2 = (node*) malloc(sizeof(node));
-	test2->data = 5;
-
-	node* test3 = (node*) malloc(sizeof(node));
-	test3->data = 3;
-
-	node* test4 = (node*) malloc(sizeof(node));
-	test4->data = 0;
-
 	HashTable table = DEFAULT_HASH;
+	
+	FILE* file = fopen(argv[1],"r");
+	
+	if(file == NULL)
+	{
+		printf("error\n");
+		return 0;
+	}
+
+	unsigned long long hex_val=0;
+
+	while(fscanf(file, "%llx",&hex_val)!=EOF)
+	{	
+		printf("hex_val %llx", hex_val);
 		
-	table.addNode(table.hashlist, test1, 0);
-	table.addNode(table.hashlist, test2, 0);
-	table.addNode(table.hashlist, test3, 0);
-	table.addNode(table.hashlist, test4, 0);
+		//get the index where the node should be stored
+		int index = table.get_hash_index(hex_val, table.size);
+		
+		//create node
+		node* newNode = create_node(hex_val);
+		newNode->data = hex_val;
+
+		table.addnode(table.hashlist, newNode, index);
+	}
 
 
 	table.printlist(table.hashlist, table.size);	
 
 	return 0;
-}
+} 
 

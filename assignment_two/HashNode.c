@@ -1,6 +1,12 @@
-#include <stdio.h>
+#include "HashNode.h"
+#include <stdlib.h>
 
-void toString(node n)
+node* create_node(unsigned long long data)
 {
-	printf("Node: %x\n", n.data);
+	node* newNode = (node*) malloc(sizeof(node));
+
+	newNode -> data = data;
+	newNode -> next = NULL;
+
+	return newNode;
 }
