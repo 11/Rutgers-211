@@ -71,7 +71,7 @@ bool hash(node** hashlist, node* newNode, int index)
 	return false;
 }
 
-node** rehash(node** hashlist, int size)
+void rehash(node** hashlist, int size)
 {
 	int i;
 
@@ -81,35 +81,53 @@ node** rehash(node** hashlist, int size)
 	//extract all the values
 	for(i=0; i<size; i++)
 	{
+		
+		//if there is nothing in the bucket
+		if(hashlist[i] == NULL)
+		{
+			continue;
+		}
+
 		node* itr = hashlist[i];
 		
-		while(itr!=NULL)
-		{
-			if(root == NULL)
-			{
-				root = itr;
-				cur = root;
-			}	
-			else
-			{
-				cur->next = itr;
-				cur = cur->next;
-			}
+		node* subroot = hashlist[i];
+		node* subtail = NULL;
 
+		while(itr->next!=NULL)
+		{
 			itr = itr->next;
 		}
+
+		subtail = itr;
+
+		if(root == NULL)
+		{
+			root = subroot;
+		}
+		else
+		{
+			cur->next = subroot;
+		}
+		
+		//push to the end of the linked list
+		cur = subtail;
+		
 	}
 
-	cur = root;
-	node** newList;
-	
-	while(cur!=NULL)
+	while(cur !=NULL)
 	{
-		hash(newList, cur, get_hash_index(cur->data, size*2));
+		printf("%llu", cur->data);
 		cur = cur->next;
 	}
 
-	return newList;
+	//uses cur as an itr var and loops through temp linked list we made
+	cur = root;
+		
+	while(cur != NULL)
+	{
+		hash(hashlist, cur, get_hash_index(cur->data, size*2));
+		cur = cur->next;
+	}
 	
 }
 

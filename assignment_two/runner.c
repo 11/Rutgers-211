@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 		//rehash
 		else
 		{
-			table.hashlist = rehash(table.hashlist, table.size);
+			rehash(table.hashlist, table.size);
 			table.size *= 2;
 		}
 

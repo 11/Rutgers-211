@@ -7,13 +7,13 @@
 typedef struct hash{
 	int size;
 	node** hashlist;
-	node** (*rehash)(node**, int);
+	void (*rehash)(node**, int);
 	int (*get_hash_index)(unsigned long long, int);
 	bool (*hash)(node**, node*, int);
 	void (*printlist)(node**, int);
 }HashTable;
 
-node** rehash(node** hashlist, int size);
+void rehash(node** hashlist, int size);
 
 int get_hash_index(unsigned long long value, int size);
 
