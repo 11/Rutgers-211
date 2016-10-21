@@ -68,7 +68,7 @@ bool hash(node** hashlist, node* newNode, int index)
 		itr->next = newNode;
 		return true;
 	}
-	return false;
+	return true;
 }
 
 node **rehash(node** hashlist, int size)
