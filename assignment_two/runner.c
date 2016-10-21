@@ -6,7 +6,8 @@
 int main(int argc, char** argv)
 {	
 	HashTable table = DEFAULT_HASH;
-	
+	table.hashlist = (node**) malloc(sizeof(node*)*table.size);
+
 	//init everything to nulll
 	int i;
 	for(i=0; i<table.size; i++)
@@ -37,29 +38,19 @@ int main(int argc, char** argv)
 		node* newNode = create_node(hex_val);
 		newNode->data = hex_val;
 		
-		printf("************************\n");
-		printf("hex_val: %llu\n", hex_val);
-		printf("index: %d\n", index);
-		printf("size: %d\n", table.size);
-		printf("*************************\n\n");
-	
-		//hash
-		//if 
-		if(count_diff < table.size)
-		{
-			bool isNewVal = table.hash(table.hashlist, newNode, index);
+		bool isNewVal = table.hash(table.hashlist, newNode, index);
 			
-			//if the hash function stored a new value in the array
-			if(isNewVal == true)
-			{
-				count_diff++;	
-			}
+		//if the hash function stored a new value in the array
+		if(isNewVal == true)
+		{
+			count_diff++;	
 		}
+		
 
 		//rehash
-		else
+		if(count_diff>table.size)
 		{
-			rehash(table.hashlist, table.size);
+			table.hashlist = rehash(table.hashlist, table.size);
 			table.size *= 2;
 		}
 
@@ -68,7 +59,7 @@ int main(int argc, char** argv)
 	//debug purposes
 	//table.printlist(table.hashlist, table.size);	
 
-	printf("%d\n", count_diff);
+	printf("count: %d\n", count_diff);
 	return 0;
 } 
 

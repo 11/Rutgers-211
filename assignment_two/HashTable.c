@@ -1,6 +1,6 @@
 #include "HashTable.h"
 #include <stdio.h>
-
+#include <stdlib.h>
 /*
  * acts as the hash function to a hashtable
  */ 
@@ -71,64 +71,30 @@ bool hash(node** hashlist, node* newNode, int index)
 	return false;
 }
 
-void rehash(node** hashlist, int size)
-{
+node **rehash(node** hashlist, int size)
+{	
+	printf("size: %d\n", size);	
+	
+	node** newlist = (node**) malloc(sizeof(node*)*size*2);
+
 	int i;
-
-	node* root = NULL;
-	node* cur = NULL;
-
-	//extract all the values
-	for(i=0; i<size; i++)
+	for(i = 0; i<size; i++)
 	{
-		
-		//if there is nothing in the bucket
 		if(hashlist[i] == NULL)
 		{
 			continue;
 		}
-
-		node* itr = hashlist[i];
-		
-		node* subroot = hashlist[i];
-		node* subtail = NULL;
-
-		while(itr->next!=NULL)
-		{
-			itr = itr->next;
-		}
-
-		subtail = itr;
-
-		if(root == NULL)
-		{
-			root = subroot;
-		}
 		else
-		{
-			cur->next = subroot;
+		{	
+			node* itr = hashlist[i];
+			while(itr != NULL)
+			{
+				hash(newlist, itr, get_hash_index(itr->data, size*2));
+				itr = itr->next;
+			}
 		}
-		
-		//push to the end of the linked list
-		cur = subtail;
-		
 	}
-
-	while(cur !=NULL)
-	{
-		printf("%llu", cur->data);
-		cur = cur->next;
-	}
-
-	//uses cur as an itr var and loops through temp linked list we made
-	cur = root;
-		
-	while(cur != NULL)
-	{
-		hash(hashlist, cur, get_hash_index(cur->data, size*2));
-		cur = cur->next;
-	}
-	
+	return newlist;
 }
 
 void printlist(node** hashlist, int size)
