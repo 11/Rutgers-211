@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 	//debug purposes
 	//table.printlist(table.hashlist, table.size);	
 
-	printf("count: %d\n", count_diff);
+	printf("%d\n", count_diff);
 	return 0;
 } 
 

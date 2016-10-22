@@ -1,2 +1,0 @@
-- Stop using a macro for hash_table size - HashTable.c
-- update files to have all lower case names
