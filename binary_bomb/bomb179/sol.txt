@@ -1,0 +1,5 @@
+When a problem comes along, you must zip it!
+10 12 16 22 30 40
+4 0
+7 0
+-&#$('
