@@ -67,22 +67,30 @@ void full_assoc(char read_or_write);
  */ 
 void n_set_assoc(char read_or_write);
 
+/*
+ * GENERAL ALGORITHM:
+ * 1. Store cache parameteres from the command line 
+ * 2. Allocate memory for a cache
+ * 3. Begin running the algorithm by extracting data from a file
+ *    a. While extracting data, use the proper write policy and cache associativity to simulate the cache given on the command line
+ *    b. Perform each read and write to the cache 
+ *    c. While reading and writing data, store stats on the cache in the occurence of an cache read/write, as well as memory hit/miss.
+ * 4. print the cache stats that were collected
+ *
+ */
 int main(int args, char **argv){
 	
-	//read the file
 	//take info from file and read and write info to and from the cache
 	//use LRU or FIFO as data is bring written to the cache
 	
 	//get the data and store it in a input object that I can pass around throughout the program
 	InputData *input = create_input_object(atoi(argv[1]), argv[2], atoi(argv[3]), argv[4], argv[5], argv[6]);
 
-	printf("%s", input->ass);
-
 	//creates the cache and allocates all the memory needed for any type of cache
 	Cache* cache = create_cache(10,10);	
 	
 	//starts reading from a file and begins running the cache simulator
-	//run("mytrace.txt");
+	run("mytrace.txt");
 
 	return 0;
 }
@@ -105,7 +113,7 @@ void run(char* filename){
 		
 		if(read_or_write == 'W'){
 			//do the thing
-
+			
 		}
 		else if(read_or_write == 'R'){
 			//do the other thing
@@ -185,8 +193,3 @@ void direct_map_cache(char read_or_write){
 	}
 
 }
-
-
-
-
-
