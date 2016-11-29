@@ -7,7 +7,6 @@ typedef enum {false, true} bool;
 typedef struct{
 	int cache_size;
 	char* ass;
-	int set_size;
 	int block_size;
 	char* rep_poly;
 	char* write_poly;
@@ -46,7 +45,7 @@ void run(char* filename);
 /*
  * Creates a collection of all the input info that I might need throughout the runtime of this program
  */
-InputData* create_input_object(int cache_size, char* ass, int set_size, int block_size, char* rep_poly, char* write_poly, char* filename);
+InputData* create_input_object(int cache_size, char* ass, int block_size, char* rep_poly, char* write_poly, char* filename);
 
 /*
  * Creates a fully structured cache
@@ -70,32 +69,27 @@ void n_set_assoc(char read_or_write);
 
 int main(int args, char **argv){
 	
-	/* 
-	Gets all the information that we need to read in the beginning of the program
-	InputData* input = (InputData*) malloc(sizeof(InputData));
-	input->cache_size = atoi(argv[1]);
-	input->ass        = argv[2];
-	input->block_size = atoi(argv[3]);
-	input->rep_poly   = argv[4];
-	input->write_poly = argv[5];
-	*/
-	
-	//create the cache
 	//read the file
 	//take info from file and read and write info to and from the cache
 	//use LRU or FIFO as data is bring written to the cache
 	
-	Cache* cache = create_cache(10,10);
-	printf("%d\n",cache->cache_sets[0]->set_blocks[0]->tag_bits);
+	//get the data and store it in a input object that I can pass around throughout the program
+	InputData *input = create_input_object(atoi(argv[1]), argv[2], atoi(argv[3]), argv[4], argv[5], argv[6]);
 
-	exit(0);	
+	printf("%s", input->ass);
+
+	//creates the cache and allocates all the memory needed for any type of cache
+	Cache* cache = create_cache(10,10);	
 	
-	
-	run("mytrace.txt");
+	//starts reading from a file and begins running the cache simulator
+	//run("mytrace.txt");
 
 	return 0;
 }
 
+/*
+ * Beings running the program by reading the trace file as well as calls proper read and write functions to simulate cache
+ */
 void run(char* filename){
 	//file that we are running the cache simulator on
 	FILE* file=fopen(filename, "r");
@@ -121,16 +115,17 @@ void run(char* filename){
 	fclose(file);	
 }
 
-
-InputData* create_input_object(int cache_size, char* ass, int set_size, int block_size, char* rep_poly, char* write_poly, char* filename){
+/*
+ * allocates memory for an input object that stores all the parameters entered in the command line, and returns a pointer to the position in the memory
+ */
+InputData* create_input_object(int cache_size, char* ass, int block_size, char* rep_poly, char* write_poly, char* filename){
 
 	InputData* input = (InputData*) malloc(sizeof(InputData));
 	input->cache_size = cache_size;
 	
 	input->ass = (char*) malloc(sizeof(ass));
 	strcpy(input->ass, ass); 
-	
-	input->set_size = set_size;
+
 	input->block_size = block_size;
 
 	input->rep_poly = (char*) malloc(sizeof(rep_poly));
@@ -141,6 +136,7 @@ InputData* create_input_object(int cache_size, char* ass, int set_size, int bloc
 
 	input->file = fopen(filename, "r");
 
+	return input;
 }
 
 /*
