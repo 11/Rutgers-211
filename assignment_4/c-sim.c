@@ -21,9 +21,14 @@ typedef struct{
 } CacheBlock;
 
 typedef struct{
-	int size;
-	CacheBlock [size];
+	int length;
+	CacheBlock set_blocks[length];
 } CacheSet;
+
+typedef struct{
+	int length;
+	CacheSet cache_sets[length];
+}Cache;
 
 typedef struct{
 	int mem_reads;
@@ -38,12 +43,17 @@ typedef struct{
 void run(char* filename);
 
 /*
+ * Creates a fully structured cache
+ */
+Cache* create_cache(int num_of_sets, int num_of_blocks)
+
+/*
  * Direct Map Cache has 1 cache line per set, a cache look-up can target the set you are seeking out directly
  */
 void direct_map_cache(char read_or_write);
 
 /*
- * Miims fully associative cache: Cache has 1 set and all cache blocks go into that one set.
+ * Mimics fully associative cache: Cache has 1 set and all cache blocks go into that one set.
  */
 void full_assoc(char read_or_write);
 
@@ -52,11 +62,10 @@ void full_assoc(char read_or_write);
  */ 
 void n_set_assoc(char read_or_write);
 
-
 int main(int args, char **argv){
 	
-	/*
-	 * Gets all the information that we need to read in the beginning of the program
+	/* 
+	Gets all the information that we need to read in the beginning of the program
 	InputData* input = (InputData*) malloc(sizeof(InputData));
 	input->cache_size = atoi(argv[1]);
 	input->ass        = argv[2];
@@ -65,8 +74,13 @@ int main(int args, char **argv){
 	input->write_poly = argv[5];
 	*/
 	
+	//create the cache
+	//read the file
+	//take info from file and read and write info to and from the cache
+	//use LRU or FIFO as data is bring written to the cache
+	
+	Cache* cache = create_cache(10,10);
 	run("mytrace.txt");
-
 
 	return 0;
 }
@@ -91,12 +105,34 @@ void run(char* filename){
 		else if(read_or_write == 'R'){
 			//do the other thing
 			
-		}
-		
-		printf("%c\n", read_or_write);
-		printf("%x\n", mem_add);
+		}	
 	}
 	fclose(file);	
+}
+
+/*
+ * Goes through an allocates memory needed for an entire cache
+ */ 
+Cache* create_cache(int num_of_sets, int num_of_blocks){
+
+	Cache* new_cache = (Cache*) malloc(sizeof(Cache));
+	new_cache->length = num_of_sets;
+	new_cache->cache_sets[num_of_sets];
+
+	for(int x=0; x<num_of_sets; x++){
+		new_cache->cache_sets[x] = (CacheSet*) malloc(sizeof(CacheSet));
+		
+		for(int y=0; y<num_of_blocks; y++){
+			new_cache->cache_sets[x] -> length = num_of_blocks;
+			
+			new_cache->cache_sets[x]->set_blocks[y] = (CacheBlock*) malloc(sizeof(CacheBlock));
+			new_cache->cache_sets[x]->set_blocks[y] -> valid_bit = false;
+			new_cache->cache_sets[x]->set_blocks[y] -> dirty_bit = false;
+			new_cache->cache_sets[x]->set_blocks[y] -> tag_bits = 0;
+			new_cache->cache_sets[x]->set_blocks[y] -> index_bits = 0;
+		}
+	}
+	return new_cache;
 }
 
 /*
@@ -106,7 +142,7 @@ void direct_map_cache(char read_or_write){
 
 	//if read 
 	if(read_or_write == 'R'){
-				
+						
 	}
 
 	//if write
