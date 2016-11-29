@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef enum {false, true} bool;
 
@@ -41,6 +42,11 @@ typedef struct{
  * Runs the cache simulator
  */ 
 void run(char* filename);
+
+/*
+ * Creates a collection of all the input info that I might need throughout the runtime of this program
+ */
+InputData* create_input_object(int cache_size, char* ass, int set_size, int block_size, char* rep_poly, char* write_poly, char* filename);
 
 /*
  * Creates a fully structured cache
@@ -113,6 +119,28 @@ void run(char* filename){
 		}	
 	}
 	fclose(file);	
+}
+
+
+InputData* create_input_object(int cache_size, char* ass, int set_size, int block_size, char* rep_poly, char* write_poly, char* filename){
+
+	InputData* input = (InputData*) malloc(sizeof(InputData));
+	input->cache_size = cache_size;
+	
+	input->ass = (char*) malloc(sizeof(ass));
+	strcpy(input->ass, ass); 
+	
+	input->set_size = set_size;
+	input->block_size = block_size;
+
+	input->rep_poly = (char*) malloc(sizeof(rep_poly));
+	strcpy(input->rep_poly, rep_poly);
+
+	input->write_poly = (char*) malloc(sizeof(write_poly));
+	strcpy(input->write_poly, write_poly);
+
+	input->file = fopen(filename, "r");
+
 }
 
 /*
