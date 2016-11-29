@@ -22,12 +22,12 @@ typedef struct{
 
 typedef struct{
 	int length;
-	CacheBlock set_blocks[length];
+	CacheBlock** set_blocks;
 } CacheSet;
 
 typedef struct{
 	int length;
-	CacheSet cache_sets[length];
+	CacheSet** cache_sets;
 }Cache;
 
 typedef struct{
@@ -45,7 +45,7 @@ void run(char* filename);
 /*
  * Creates a fully structured cache
  */
-Cache* create_cache(int num_of_sets, int num_of_blocks)
+Cache* create_cache(int num_of_sets, int num_of_blocks);
 
 /*
  * Direct Map Cache has 1 cache line per set, a cache look-up can target the set you are seeking out directly
@@ -80,6 +80,11 @@ int main(int args, char **argv){
 	//use LRU or FIFO as data is bring written to the cache
 	
 	Cache* cache = create_cache(10,10);
+	printf("%d\n",cache->cache_sets[0]->set_blocks[0]->tag_bits);
+
+	exit(0);	
+	
+	
 	run("mytrace.txt");
 
 	return 0;
@@ -111,27 +116,32 @@ void run(char* filename){
 }
 
 /*
- * Goes through an allocates memory needed for an entire cache
+ * Goes through and allocates memory needed for an entire cache
  */ 
 Cache* create_cache(int num_of_sets, int num_of_blocks){
 
 	Cache* new_cache = (Cache*) malloc(sizeof(Cache));
 	new_cache->length = num_of_sets;
-	new_cache->cache_sets[num_of_sets];
 
-	for(int x=0; x<num_of_sets; x++){
+	new_cache->cache_sets = (CacheSet**) malloc(num_of_sets * sizeof(CacheSet*));
+	
+	int x,y;
+	for(x=0; x<num_of_sets; x++)
+	{
 		new_cache->cache_sets[x] = (CacheSet*) malloc(sizeof(CacheSet));
-		
-		for(int y=0; y<num_of_blocks; y++){
-			new_cache->cache_sets[x] -> length = num_of_blocks;
+		new_cache->cache_sets[x]->length=num_of_blocks;
+
+		new_cache->cache_sets[x]->set_blocks = (CacheBlock**) malloc(num_of_blocks * sizeof(CacheBlock*));
+		for(y=0; y<num_of_blocks; y++){
+			new_cache->cache_sets[x]->set_blocks[y] = (CacheBlock*)malloc(sizeof(CacheBlock));
 			
-			new_cache->cache_sets[x]->set_blocks[y] = (CacheBlock*) malloc(sizeof(CacheBlock));
-			new_cache->cache_sets[x]->set_blocks[y] -> valid_bit = false;
-			new_cache->cache_sets[x]->set_blocks[y] -> dirty_bit = false;
-			new_cache->cache_sets[x]->set_blocks[y] -> tag_bits = 0;
-			new_cache->cache_sets[x]->set_blocks[y] -> index_bits = 0;
+			new_cache->cache_sets[x]->set_blocks[y]->valid_bit = false;
+			new_cache->cache_sets[x]->set_blocks[y]->dirty_bit = false;
+			new_cache->cache_sets[x]->set_blocks[y]->tag_bits = 0;
+			new_cache->cache_sets[x]->set_blocks[y]->index_bits = 0;
 		}
 	}
+
 	return new_cache;
 }
 
